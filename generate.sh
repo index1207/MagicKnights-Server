@@ -1,0 +1,1 @@
+protoc -I ./proto --plugin=./node_modules/.bin/protoc-gen-ts_proto.cmd --ts_proto_out=./src/proto ./proto/$1.proto
