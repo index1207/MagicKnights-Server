@@ -4,7 +4,4 @@ package packet;
 
 import "Transform.proto";
 
-message C_Move {
-  int32 playerId = 1;
-  Vector3 position = 2;
-}
+option csharp_namespace = "Google.Protobuf.Packet";

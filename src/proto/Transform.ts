@@ -3,25 +3,25 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "packet";
 
-export interface Vector3 {
+export interface FVector3 {
   x: number;
   y: number;
   z: number;
 }
 
-export interface Quaternion {
+export interface FQuaternion {
   x: number;
   y: number;
   z: number;
   w: number;
 }
 
-function createBaseVector3(): Vector3 {
+function createBaseFVector3(): FVector3 {
   return { x: 0, y: 0, z: 0 };
 }
 
-export const Vector3 = {
-  encode(message: Vector3, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const FVector3 = {
+  encode(message: FVector3, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.x !== 0) {
       writer.uint32(13).float(message.x);
     }
@@ -34,10 +34,10 @@ export const Vector3 = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Vector3 {
+  decode(input: _m0.Reader | Uint8Array, length?: number): FVector3 {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseVector3();
+    const message = createBaseFVector3();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -71,7 +71,7 @@ export const Vector3 = {
     return message;
   },
 
-  fromJSON(object: any): Vector3 {
+  fromJSON(object: any): FVector3 {
     return {
       x: isSet(object.x) ? Number(object.x) : 0,
       y: isSet(object.y) ? Number(object.y) : 0,
@@ -79,7 +79,7 @@ export const Vector3 = {
     };
   },
 
-  toJSON(message: Vector3): unknown {
+  toJSON(message: FVector3): unknown {
     const obj: any = {};
     if (message.x !== 0) {
       obj.x = message.x;
@@ -93,11 +93,11 @@ export const Vector3 = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Vector3>, I>>(base?: I): Vector3 {
-    return Vector3.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<FVector3>, I>>(base?: I): FVector3 {
+    return FVector3.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<Vector3>, I>>(object: I): Vector3 {
-    const message = createBaseVector3();
+  fromPartial<I extends Exact<DeepPartial<FVector3>, I>>(object: I): FVector3 {
+    const message = createBaseFVector3();
     message.x = object.x ?? 0;
     message.y = object.y ?? 0;
     message.z = object.z ?? 0;
@@ -105,12 +105,12 @@ export const Vector3 = {
   },
 };
 
-function createBaseQuaternion(): Quaternion {
+function createBaseFQuaternion(): FQuaternion {
   return { x: 0, y: 0, z: 0, w: 0 };
 }
 
-export const Quaternion = {
-  encode(message: Quaternion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const FQuaternion = {
+  encode(message: FQuaternion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.x !== 0) {
       writer.uint32(13).float(message.x);
     }
@@ -126,10 +126,10 @@ export const Quaternion = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Quaternion {
+  decode(input: _m0.Reader | Uint8Array, length?: number): FQuaternion {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQuaternion();
+    const message = createBaseFQuaternion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -170,7 +170,7 @@ export const Quaternion = {
     return message;
   },
 
-  fromJSON(object: any): Quaternion {
+  fromJSON(object: any): FQuaternion {
     return {
       x: isSet(object.x) ? Number(object.x) : 0,
       y: isSet(object.y) ? Number(object.y) : 0,
@@ -179,7 +179,7 @@ export const Quaternion = {
     };
   },
 
-  toJSON(message: Quaternion): unknown {
+  toJSON(message: FQuaternion): unknown {
     const obj: any = {};
     if (message.x !== 0) {
       obj.x = message.x;
@@ -196,11 +196,11 @@ export const Quaternion = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Quaternion>, I>>(base?: I): Quaternion {
-    return Quaternion.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<FQuaternion>, I>>(base?: I): FQuaternion {
+    return FQuaternion.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<Quaternion>, I>>(object: I): Quaternion {
-    const message = createBaseQuaternion();
+  fromPartial<I extends Exact<DeepPartial<FQuaternion>, I>>(object: I): FQuaternion {
+    const message = createBaseFQuaternion();
     message.x = object.x ?? 0;
     message.y = object.y ?? 0;
     message.z = object.z ?? 0;
