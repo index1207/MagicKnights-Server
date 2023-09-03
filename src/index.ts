@@ -1,5 +1,10 @@
 import ws, {Server, WebSocket} from 'ws'
-import {FVector3} from "./proto/Transform";
+import {SEnterGame} from "./proto/Room";
+import {numToUint8Array} from "./util";
+import * as buffer from "buffer";
+
+let sessionId: number = 0
+let sessions: Map<number, WebSocket> = new Map<number, WebSocket>
 
 const port: number = 8081
 
@@ -10,8 +15,25 @@ server.on('listening', () => {
 
 server.on('connection', (socket: WebSocket) => {
     console.log("connected")
+    sessions.set(sessionId++, socket)
+
+    let packet: SEnterGame = {playerId: 1}
+    let data: Uint8Array = SEnterGame.encode(packet).finish()
+    const pktId: Uint8Array = numToUint8Array(0)
+    const pktSize: Uint8Array = numToUint8Array(data.byteLength)
+
+    console.log(pktSize)
+
+    //let buffer: ArrayBufferLike = new ArrayBuffer(pktSize+2)
+
     socket.on('message', (packet: any) => {
-        const v: FVector3 = FVector3.decode(packet);
-        console.log(`recv: vector(${v.x}, ${v.y}, ${v.z})`)
+
     })
 })
+
+function Broadcast(packet: any)
+{
+    sessions.forEach((value: WebSocket, key: number, map: Map<number, WebSocket>) => {
+        value.send(packet.finish())
+    })
+}
