@@ -1,52 +1,30 @@
-import * as http from "http"
-import {server, connection, request, Message} from "websocket"
-import {Session} from "./session"
-import {OnRecvPacket} from "./packetHandler"
+import {Server, WebSocket} from "ws";
+import {SEnterGame} from "../proto/Room";
+import {Session} from "./session";
 
-export class Listener {
-    private httpServer: http.Server
-    private server: server
-    private port: number
-    private sessions: Map<number, Session> = new Map
+export class Listener
+{
+    private server: Server;
+    private port: number;
 
-    constructor() {
-        this.port = 0
-        this.httpServer = null
-        this.server = null
+    constructor(port: number) {
+        this.port = port;
+        this.server = new Server({port: port})
     }
 
-    listen(port: number) {
-        this.port = port;
-
-        this.httpServer = http.createServer((req: http.IncomingMessage, res:http.ServerResponse) => {
-            res.writeHead(404)
-            res.end()
-        })
-
-        this.server = new server({
-            httpServer: this.httpServer,
-            closeTimeout: 5000,
-            autoAcceptConnections: false
-        })
-
-        this.server.on('connect', (connection: connection) => {
-            console.log(`Client connected ${connection.remoteAddress}`)
-        })
-
-        this.server.on('request', async (req: request) => {
-            const session: Session = new Session(req.accept(null, req.origin))
-
-            this.sessions.set(session.sessionId, session)
-
-            session.sock.on('message', (msg: Message) => {
-                if(msg.type == 'binary') {
-                    OnRecvPacket(session, msg.binaryData)
-                }
-            })
-        })
-
-        this.httpServer.listen(this.port, () => {
+    run()
+    {
+        this.server.on('listening', () => {
             console.log(`Server is running on ${this.port}`)
+        })
+
+        this.server.on('connection', (socket: WebSocket) => {
+            const session: Session = new Session(socket)
+            session.OnConnected();
+
+            socket.on('message', (packet: Buffer) => {
+
+            })
         })
     }
 }
