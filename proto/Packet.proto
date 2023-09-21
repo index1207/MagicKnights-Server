@@ -6,3 +6,11 @@ import "Transform.proto";
 import "Room.proto";
 
 option csharp_namespace = "Google.Protobuf.Packet";
+
+enum PacketID
+{
+  S_CONNECTED_TO_SERVER = 0;
+  C_ROOM_LIST_REQ = 1;
+  S_ROOM_LIST_RES = 2;
+  C_CREATE_ROOM = 3;
+}

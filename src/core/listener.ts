@@ -1,21 +1,23 @@
 import {Server, WebSocket} from "ws";
-import {SEnterGame} from "../proto/Room";
 import {Session} from "./session";
+import {OnRecvPacket} from "./packetHandler"
 
 export class Listener
 {
     private server: Server;
     private port: number;
+    private host: string;
 
-    constructor(port: number) {
+    constructor(host: string, port: number) {
+        this.host = host;
         this.port = port;
-        this.server = new Server({port: port})
+        this.server = new Server({port: port, host: host})
     }
 
     run()
     {
         this.server.on('listening', () => {
-            console.log(`Server is running on ${this.port}`)
+            console.log(`Server is running on ${this.host}:${this.port}`)
         })
 
         this.server.on('connection', (socket: WebSocket) => {
@@ -23,7 +25,7 @@ export class Listener
             session.OnConnected();
 
             socket.on('message', (packet: Buffer) => {
-
+                OnRecvPacket(session, packet)
             })
         })
     }

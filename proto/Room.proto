@@ -2,7 +2,34 @@ syntax = "proto3";
 
 package packet;
 
-message S_EnterGame
+message Room
+{
+  string name = 1;
+  string pwd = 2;
+  bool isOpen = 3;
+}
+
+
+// on connected to server
+message S_ConnectedToServer
 {
   int32 playerId = 1;
+}
+
+// (request) get room list
+message C_RoomListReq
+{
+
+}
+
+// (response) load all rooms
+message S_RoomListRes
+{
+  repeated Room rooms = 1;
+}
+
+// create new room
+message C_CreateRoom
+{
+  Room reqRoom = 1;
 }

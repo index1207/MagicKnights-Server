@@ -1,15 +1,28 @@
-import {Session} from "./session";
-import {SEnterGame} from "../proto/Room";
+import {Session} from "./session"
+import {PacketID} from "../proto/Packet";
+import {CCreateRoom, Room, SConnectedToServer, SRoomListRes,} from "../proto/Room";
+import {CRoomListReq} from "../proto/Room";
 
-export let PacketID: Map<any, number> = new Map<any, number>()
-PacketID.set(SEnterGame, 1)
+export let packetId: Map<any, number> = new Map<any, number>()
+packetId.set(SConnectedToServer, PacketID.S_CONNECTED_TO_SERVER);
+packetId.set(CRoomListReq, PacketID.C_ROOM_LIST_REQ)
+packetId.set(SRoomListRes, PacketID.S_ROOM_LIST_RES)
+packetId.set(CCreateRoom, PacketID.C_CREATE_ROOM)
+
+let roomList: Array<Room> = new Array<Room>()
 
 export function OnRecvPacket(session: Session, buffer: Buffer) {
-    const pktId: number = buffer.readUint16BE(0);
-    const serializedData: Buffer = buffer.subarray(4, buffer.byteLength)
+    const pktId: number = buffer.readUint16LE(0);
+    const serializedData: Buffer = buffer.subarray(2, buffer.byteLength)
 
-    switch (pktId)
-    {
-
+    switch (pktId) {
+        case PacketID.C_ROOM_LIST_REQ:
+            let res: SRoomListRes = {rooms: roomList}
+            session.Send(SRoomListRes, res)
+            break
+        case PacketID.C_CREATE_ROOM:
+            let create: CCreateRoom = CCreateRoom.decode(serializedData)
+            roomList.push(create.reqRoom)
+            break;
     }
 }

@@ -17,6 +17,7 @@
     "protobufjs": "^7.2.5",
     "ts-node": "^10.9.1",
     "ts-proto": "^1.156.7",
+    "ts-reflection": "^0.3.0",
     "tsconfig-paths": "^4.2.0",
     "websocket": "^1.0.34",
     "ws": "^8.13.0"

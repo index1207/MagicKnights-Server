@@ -1,6 +1,6 @@
 import {WebSocket} from "ws";
-import {SEnterGame} from "../proto/Room";
-import {PacketID} from './packetHandler'
+import {SConnectedToServer} from "../proto/Room";
+import {packetId} from './packetHandler'
 
 let lastSessionId: number = 1
 
@@ -15,18 +15,18 @@ export class Session {
     OnConnected() {
         console.log('connect')
 
-        const enter: SEnterGame = {playerId: this.sessionId}
-        this.Send(SEnterGame, enter)
+        const enter: SConnectedToServer = {playerId: this.sessionId}
+        this.Send(SConnectedToServer, enter)
     }
     OnDisconnected() {}
     OnSend() {
     }
     OnRecv() {}
 
-    Send(packetType: any, packet: any) {
-        let rawData = packetType.encode(packet).finish()
+    Send(id: any, packet: any) {
+        let rawData: any = id.encode(packet).finish()
         let buffer: Buffer = Buffer.allocUnsafe(rawData.byteLength+2)
-        buffer.writeUInt16LE(PacketID.get(packetType), 0);
+        buffer.writeUInt16LE(packetId.get(id), 0);
         buffer.set(rawData, 2);
 
         try {
