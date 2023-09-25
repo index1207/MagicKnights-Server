@@ -3,10 +3,11 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "packet";
 
+/** room data */
 export interface Room {
   name: string;
-  pwd: string;
-  isOpen: boolean;
+  pwd?: string | undefined;
+  enterPlayers: number[];
 }
 
 /** on connected to server */
@@ -28,8 +29,17 @@ export interface CCreateRoom {
   reqRoom: Room | undefined;
 }
 
+export interface CEnterRoom {
+  roomName: string;
+  playerId: number;
+}
+
+export interface SBroadcastDestroyRoom {
+  name: string;
+}
+
 function createBaseRoom(): Room {
-  return { name: "", pwd: "", isOpen: false };
+  return { name: "", pwd: undefined, enterPlayers: [] };
 }
 
 export const Room = {
@@ -37,12 +47,14 @@ export const Room = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.pwd !== "") {
+    if (message.pwd !== undefined) {
       writer.uint32(18).string(message.pwd);
     }
-    if (message.isOpen === true) {
-      writer.uint32(24).bool(message.isOpen);
+    writer.uint32(26).fork();
+    for (const v of message.enterPlayers) {
+      writer.int32(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -68,12 +80,22 @@ export const Room = {
           message.pwd = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
-            break;
+          if (tag === 24) {
+            message.enterPlayers.push(reader.int32());
+
+            continue;
           }
 
-          message.isOpen = reader.bool();
-          continue;
+          if (tag === 26) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.enterPlayers.push(reader.int32());
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -86,8 +108,8 @@ export const Room = {
   fromJSON(object: any): Room {
     return {
       name: isSet(object.name) ? String(object.name) : "",
-      pwd: isSet(object.pwd) ? String(object.pwd) : "",
-      isOpen: isSet(object.isOpen) ? Boolean(object.isOpen) : false,
+      pwd: isSet(object.pwd) ? String(object.pwd) : undefined,
+      enterPlayers: Array.isArray(object?.enterPlayers) ? object.enterPlayers.map((e: any) => Number(e)) : [],
     };
   },
 
@@ -96,11 +118,11 @@ export const Room = {
     if (message.name !== "") {
       obj.name = message.name;
     }
-    if (message.pwd !== "") {
+    if (message.pwd !== undefined) {
       obj.pwd = message.pwd;
     }
-    if (message.isOpen === true) {
-      obj.isOpen = message.isOpen;
+    if (message.enterPlayers?.length) {
+      obj.enterPlayers = message.enterPlayers.map((e) => Math.round(e));
     }
     return obj;
   },
@@ -111,8 +133,8 @@ export const Room = {
   fromPartial<I extends Exact<DeepPartial<Room>, I>>(object: I): Room {
     const message = createBaseRoom();
     message.name = object.name ?? "";
-    message.pwd = object.pwd ?? "";
-    message.isOpen = object.isOpen ?? false;
+    message.pwd = object.pwd ?? undefined;
+    message.enterPlayers = object.enterPlayers?.map((e) => e) || [];
     return message;
   },
 };
@@ -329,6 +351,137 @@ export const CCreateRoom = {
     message.reqRoom = (object.reqRoom !== undefined && object.reqRoom !== null)
       ? Room.fromPartial(object.reqRoom)
       : undefined;
+    return message;
+  },
+};
+
+function createBaseCEnterRoom(): CEnterRoom {
+  return { roomName: "", playerId: 0 };
+}
+
+export const CEnterRoom = {
+  encode(message: CEnterRoom, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.roomName !== "") {
+      writer.uint32(10).string(message.roomName);
+    }
+    if (message.playerId !== 0) {
+      writer.uint32(16).int32(message.playerId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CEnterRoom {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCEnterRoom();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.roomName = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.playerId = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CEnterRoom {
+    return {
+      roomName: isSet(object.roomName) ? String(object.roomName) : "",
+      playerId: isSet(object.playerId) ? Number(object.playerId) : 0,
+    };
+  },
+
+  toJSON(message: CEnterRoom): unknown {
+    const obj: any = {};
+    if (message.roomName !== "") {
+      obj.roomName = message.roomName;
+    }
+    if (message.playerId !== 0) {
+      obj.playerId = Math.round(message.playerId);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CEnterRoom>, I>>(base?: I): CEnterRoom {
+    return CEnterRoom.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<CEnterRoom>, I>>(object: I): CEnterRoom {
+    const message = createBaseCEnterRoom();
+    message.roomName = object.roomName ?? "";
+    message.playerId = object.playerId ?? 0;
+    return message;
+  },
+};
+
+function createBaseSBroadcastDestroyRoom(): SBroadcastDestroyRoom {
+  return { name: "" };
+}
+
+export const SBroadcastDestroyRoom = {
+  encode(message: SBroadcastDestroyRoom, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SBroadcastDestroyRoom {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSBroadcastDestroyRoom();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SBroadcastDestroyRoom {
+    return { name: isSet(object.name) ? String(object.name) : "" };
+  },
+
+  toJSON(message: SBroadcastDestroyRoom): unknown {
+    const obj: any = {};
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SBroadcastDestroyRoom>, I>>(base?: I): SBroadcastDestroyRoom {
+    return SBroadcastDestroyRoom.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SBroadcastDestroyRoom>, I>>(object: I): SBroadcastDestroyRoom {
+    const message = createBaseSBroadcastDestroyRoom();
+    message.name = object.name ?? "";
     return message;
   },
 };

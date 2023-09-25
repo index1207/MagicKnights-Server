@@ -2,34 +2,36 @@ syntax = "proto3";
 
 package packet;
 
-message Room
-{
+// room data
+message Room {
   string name = 1;
-  string pwd = 2;
-  bool isOpen = 3;
+  optional string pwd = 2;
+  repeated int32 enterPlayers = 3;
 }
 
-
 // on connected to server
-message S_ConnectedToServer
-{
+message S_ConnectedToServer {
   int32 playerId = 1;
 }
 
 // (request) get room list
-message C_RoomListReq
-{
-
-}
+message C_RoomListReq { }
 
 // (response) load all rooms
-message S_RoomListRes
-{
+message S_RoomListRes {
   repeated Room rooms = 1;
 }
 
 // create new room
-message C_CreateRoom
-{
+message C_CreateRoom {
   Room reqRoom = 1;
+}
+
+message C_EnterRoom {
+  string roomName = 1;
+  int32 playerId = 2;
+}
+
+message S_BroadcastDestroyRoom {
+  string name = 1;
 }

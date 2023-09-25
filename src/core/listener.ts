@@ -1,5 +1,5 @@
 import {Server, WebSocket} from "ws";
-import {Session} from "./session";
+import {Session, sessionList} from "./session";
 import {OnRecvPacket} from "./packetHandler"
 
 export class Listener
@@ -24,8 +24,14 @@ export class Listener
             const session: Session = new Session(socket)
             session.OnConnected();
 
+            sessionList.set(socket, session)
+
             socket.on('message', (packet: Buffer) => {
                 OnRecvPacket(session, packet)
+            })
+            socket.on('close', () => {
+                sessionList.get(socket).OnDisconnected()
+                sessionList.delete(socket)
             })
         })
     }

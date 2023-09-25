@@ -13,4 +13,5 @@ enum PacketID
   C_ROOM_LIST_REQ = 1;
   S_ROOM_LIST_RES = 2;
   C_CREATE_ROOM = 3;
+  S_BROADCAST_DESTROY_ROOM = 4;
 }

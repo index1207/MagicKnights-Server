@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc",
-    "build:live": "nodemon --watch src --exec ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc && pkg dist/index.js -t node10-win-x64"
   },
   "author": "",
   "license": "ISC",
