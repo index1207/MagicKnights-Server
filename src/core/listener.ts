@@ -30,7 +30,7 @@ export class Listener
                 OnRecvPacket(session, packet)
             })
             socket.on('close', () => {
-                sessionList.get(socket).OnDisconnected()
+                session.OnDisconnected()
                 sessionList.delete(socket)
             })
         })

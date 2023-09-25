@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc && pkg dist/index.js -t node10-win-x64"
+    "build": "tsc && pkg . --out-path build -t node18-win-x64"
+  },
+  "bin": {
+    "app": "dist/index.js"
   },
   "author": "",
   "license": "ISC",

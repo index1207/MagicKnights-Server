@@ -1,6 +1,9 @@
 import {WebSocket} from "ws";
-import {Room, SBroadcastDestroyRoom, SConnectedToServer, SRoomListRes} from "../proto/Room";
-import {packetId, roomList} from './packetHandler'
+import {Room, SConnectedToServer, SRoomListRes} from "../proto/Room";
+import {packetId} from './packetHandler'
+
+import {handler} from "../handler/room";
+import roomList = handler.roomList;
 
 let lastSessionId: number = 1
 export let sessionList: Map<WebSocket, Session> = new Map<WebSocket, Session>()
@@ -57,11 +60,10 @@ export class Session {
             roomList.splice(roomList.findIndex((r) => {
                 return r.name == this.room.name
             }), 1)
-            let newRoomList: SRoomListRes = {rooms: roomList}
-            sessionList.forEach((value, key) => {
-                value.Send(SRoomListRes, newRoomList)
-            })
-            console.log('destroy room')
         }
+        let newRoomList: SRoomListRes = {rooms: roomList}
+        sessionList.forEach((value, key) => {
+            value.Send(SRoomListRes, newRoomList)
+        })
     }
 }

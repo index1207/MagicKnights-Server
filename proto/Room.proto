@@ -27,7 +27,10 @@ message C_CreateRoom {
   Room reqRoom = 1;
 }
 
-message C_EnterRoom {
+message C_EnterRoomReq {
   string roomName = 1;
-  int32 playerId = 2;
+}
+
+message S_EnterRoomRes {
+  bool isOk = 1;
 }

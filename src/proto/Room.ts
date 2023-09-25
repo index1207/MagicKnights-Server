@@ -29,13 +29,12 @@ export interface CCreateRoom {
   reqRoom: Room | undefined;
 }
 
-export interface CEnterRoom {
+export interface CEnterRoomReq {
   roomName: string;
-  playerId: number;
 }
 
-export interface SBroadcastDestroyRoom {
-  name: string;
+export interface SEnterRoomRes {
+  isOk: boolean;
 }
 
 function createBaseRoom(): Room {
@@ -355,25 +354,22 @@ export const CCreateRoom = {
   },
 };
 
-function createBaseCEnterRoom(): CEnterRoom {
-  return { roomName: "", playerId: 0 };
+function createBaseCEnterRoomReq(): CEnterRoomReq {
+  return { roomName: "" };
 }
 
-export const CEnterRoom = {
-  encode(message: CEnterRoom, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const CEnterRoomReq = {
+  encode(message: CEnterRoomReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.roomName !== "") {
       writer.uint32(10).string(message.roomName);
-    }
-    if (message.playerId !== 0) {
-      writer.uint32(16).int32(message.playerId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CEnterRoom {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CEnterRoomReq {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCEnterRoom();
+    const message = createBaseCEnterRoomReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -384,13 +380,6 @@ export const CEnterRoom = {
 
           message.roomName = reader.string();
           continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.playerId = reader.int32();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -400,60 +389,53 @@ export const CEnterRoom = {
     return message;
   },
 
-  fromJSON(object: any): CEnterRoom {
-    return {
-      roomName: isSet(object.roomName) ? String(object.roomName) : "",
-      playerId: isSet(object.playerId) ? Number(object.playerId) : 0,
-    };
+  fromJSON(object: any): CEnterRoomReq {
+    return { roomName: isSet(object.roomName) ? String(object.roomName) : "" };
   },
 
-  toJSON(message: CEnterRoom): unknown {
+  toJSON(message: CEnterRoomReq): unknown {
     const obj: any = {};
     if (message.roomName !== "") {
       obj.roomName = message.roomName;
     }
-    if (message.playerId !== 0) {
-      obj.playerId = Math.round(message.playerId);
-    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CEnterRoom>, I>>(base?: I): CEnterRoom {
-    return CEnterRoom.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<CEnterRoomReq>, I>>(base?: I): CEnterRoomReq {
+    return CEnterRoomReq.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<CEnterRoom>, I>>(object: I): CEnterRoom {
-    const message = createBaseCEnterRoom();
+  fromPartial<I extends Exact<DeepPartial<CEnterRoomReq>, I>>(object: I): CEnterRoomReq {
+    const message = createBaseCEnterRoomReq();
     message.roomName = object.roomName ?? "";
-    message.playerId = object.playerId ?? 0;
     return message;
   },
 };
 
-function createBaseSBroadcastDestroyRoom(): SBroadcastDestroyRoom {
-  return { name: "" };
+function createBaseSEnterRoomRes(): SEnterRoomRes {
+  return { isOk: false };
 }
 
-export const SBroadcastDestroyRoom = {
-  encode(message: SBroadcastDestroyRoom, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
+export const SEnterRoomRes = {
+  encode(message: SEnterRoomRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.isOk === true) {
+      writer.uint32(8).bool(message.isOk);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SBroadcastDestroyRoom {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SEnterRoomRes {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSBroadcastDestroyRoom();
+    const message = createBaseSEnterRoomRes();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.name = reader.string();
+          message.isOk = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -464,24 +446,24 @@ export const SBroadcastDestroyRoom = {
     return message;
   },
 
-  fromJSON(object: any): SBroadcastDestroyRoom {
-    return { name: isSet(object.name) ? String(object.name) : "" };
+  fromJSON(object: any): SEnterRoomRes {
+    return { isOk: isSet(object.isOk) ? Boolean(object.isOk) : false };
   },
 
-  toJSON(message: SBroadcastDestroyRoom): unknown {
+  toJSON(message: SEnterRoomRes): unknown {
     const obj: any = {};
-    if (message.name !== "") {
-      obj.name = message.name;
+    if (message.isOk === true) {
+      obj.isOk = message.isOk;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SBroadcastDestroyRoom>, I>>(base?: I): SBroadcastDestroyRoom {
-    return SBroadcastDestroyRoom.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<SEnterRoomRes>, I>>(base?: I): SEnterRoomRes {
+    return SEnterRoomRes.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SBroadcastDestroyRoom>, I>>(object: I): SBroadcastDestroyRoom {
-    const message = createBaseSBroadcastDestroyRoom();
-    message.name = object.name ?? "";
+  fromPartial<I extends Exact<DeepPartial<SEnterRoomRes>, I>>(object: I): SEnterRoomRes {
+    const message = createBaseSEnterRoomRes();
+    message.isOk = object.isOk ?? false;
     return message;
   },
 };

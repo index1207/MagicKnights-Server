@@ -1,27 +1,19 @@
-import {Session, sessionList} from "./session"
+import {Session} from "./session"
 import {PacketID} from "../proto/Packet";
-import {CCreateRoom, Room, SBroadcastDestroyRoom, SConnectedToServer, SRoomListRes,} from "../proto/Room";
+import {CCreateRoom, CEnterRoomReq, SConnectedToServer, SEnterRoomRes, SRoomListRes,} from "../proto/Room";
 import {CRoomListReq} from "../proto/Room";
+import {handler} from "../handler/room";
+import Room = handler.Room;
 
-/*
-enum PacketID
-{
-  S_CONNECTED_TO_SERVER = 0;
-  C_ROOM_LIST_REQ = 1;
-  S_ROOM_LIST_RES = 2;
-  C_CREATE_ROOM = 3;
-  S_BROADCAST_DESTROY_ROOM = 4;
-}
-*/
 
 export let packetId: Map<any, number> = new Map<any, number>()
 packetId.set(SConnectedToServer, PacketID.S_CONNECTED_TO_SERVER);
 packetId.set(CRoomListReq, PacketID.C_ROOM_LIST_REQ)
 packetId.set(SRoomListRes, PacketID.S_ROOM_LIST_RES)
 packetId.set(CCreateRoom, PacketID.C_CREATE_ROOM)
-packetId.set(SBroadcastDestroyRoom, PacketID.S_BROADCAST_DESTROY_ROOM)
+packetId.set(CEnterRoomReq, PacketID.C_ENTER_ROOM_REQ)
+packetId.set(SEnterRoomRes, PacketID.S_ENTER_ROOM_RES)
 
-export let roomList: Array<Room> = new Array<Room>()
 
 export function OnRecvPacket(session: Session, buffer: Buffer) {
     const pktId: number = buffer.readUint16LE(0);
@@ -30,21 +22,17 @@ export function OnRecvPacket(session: Session, buffer: Buffer) {
     switch (pktId) {
         case PacketID.C_ROOM_LIST_REQ:
         {
-            let res: SRoomListRes = {rooms: roomList}
-            session.Send(SRoomListRes, res)
+            Room.SendRoomList(session)
             break
         }
         case PacketID.C_CREATE_ROOM:
         {
-            let create: CCreateRoom = CCreateRoom.decode(serializedData)
-            roomList.push(create.reqRoom)
-
-            session.EnterRoom(create.reqRoom)
-
-            sessionList.forEach((value, key) => {
-                let list: SRoomListRes = {rooms: roomList}
-                value.Send(SRoomListRes, list)
-            })
+            Room.CreateRoom(session, CCreateRoom.decode(serializedData))
+            break;
+        }
+        case PacketID.C_ENTER_ROOM_REQ:
+        {
+            Room.EnterRoom(session, CEnterRoomReq.decode(serializedData))
             break;
         }
     }
