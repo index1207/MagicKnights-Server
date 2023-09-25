@@ -1,4 +1,4 @@
-import {Session} from "./session"
+import {Session, sessionList} from "./session"
 import {PacketID} from "../proto/Packet";
 import {CCreateRoom, Room, SBroadcastDestroyRoom, SConnectedToServer, SRoomListRes,} from "../proto/Room";
 import {CRoomListReq} from "../proto/Room";
@@ -39,9 +39,12 @@ export function OnRecvPacket(session: Session, buffer: Buffer) {
             let create: CCreateRoom = CCreateRoom.decode(serializedData)
             roomList.push(create.reqRoom)
 
-            console.log('created room')
-
             session.EnterRoom(create.reqRoom)
+
+            sessionList.forEach((value, key) => {
+                let list: SRoomListRes = {rooms: roomList}
+                value.Send(SRoomListRes, list)
+            })
             break;
         }
     }

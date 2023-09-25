@@ -1,5 +1,5 @@
 import {WebSocket} from "ws";
-import {Room, SBroadcastDestroyRoom, SConnectedToServer} from "../proto/Room";
+import {Room, SBroadcastDestroyRoom, SConnectedToServer, SRoomListRes} from "../proto/Room";
 import {packetId, roomList} from './packetHandler'
 
 let lastSessionId: number = 1
@@ -24,7 +24,8 @@ export class Session {
         this.Send(SConnectedToServer, enter)
     }
     OnDisconnected() {
-        this.LeaveRoom()
+        if (this.room != null)
+            this.LeaveRoom()
     }
     OnSend() {
     }
@@ -51,18 +52,16 @@ export class Session {
     }
 
     LeaveRoom() {
-        if (this.room != null) {
-            this.room.enterPlayers.splice(this.room.enterPlayers.findIndex((r) => r == this.sessionId), 1)
-            if (this.room.enterPlayers.length == 0) {
-                roomList.splice(roomList.findIndex((r) => {
-                    return r.name == this.room.name
-                }), 1)
-                let destroyRoom: SBroadcastDestroyRoom = {name: this.room.name}
-                sessionList.forEach((value, key) => {
-                    value.Send(SBroadcastDestroyRoom, destroyRoom)
-                })
-                console.log('destroy room')
-            }
+        this.room.enterPlayers.splice(this.room.enterPlayers.findIndex((r) => r == this.sessionId), 1)
+        if (this.room.enterPlayers.length == 0) {
+            roomList.splice(roomList.findIndex((r) => {
+                return r.name == this.room.name
+            }), 1)
+            let newRoomList: SRoomListRes = {rooms: roomList}
+            sessionList.forEach((value, key) => {
+                value.Send(SRoomListRes, newRoomList)
+            })
+            console.log('destroy room')
         }
     }
 }

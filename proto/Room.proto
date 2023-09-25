@@ -31,7 +31,3 @@ message C_EnterRoom {
   string roomName = 1;
   int32 playerId = 2;
 }
-
-message S_BroadcastDestroyRoom {
-  string name = 1;
-}

@@ -1,4 +1,7 @@
+// @ts-ignore
+
 import {Listener} from "./core/listener";
+import {SBroadcastDestroyRoom} from "./proto/Room";
 
 var os = require('os');
 
