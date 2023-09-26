@@ -6,7 +6,7 @@ import {handler} from "../handler/room";
 import roomList = handler.roomList;
 
 let lastSessionId: number = 1
-export let sessionList: Map<WebSocket, Session> = new Map<WebSocket, Session>()
+export let sessionList: Map<number, Session> = new Map<number, Session>()
 
 export class Session {
     public sock: WebSocket
@@ -65,5 +65,11 @@ export class Session {
         sessionList.forEach((value, key) => {
             value.Send(SRoomListRes, newRoomList)
         })
+    }
+    Broadcast(packetId: any, packet: any) {
+        for (const playerId of this.room.enterPlayers) {
+            if (playerId != this.sessionId)
+                sessionList.get(playerId).Send(packetId, packet)
+        }
     }
 }

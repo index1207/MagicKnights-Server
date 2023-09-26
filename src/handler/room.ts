@@ -1,6 +1,5 @@
 import {CCreateRoom, CEnterRoomReq, SEnterRoomRes, SRoomListRes} from "../proto/Room";
 import {Session, sessionList} from "../core/session";
-import {WebSocket} from "ws";
 
 import * as protobuf from "../proto/Room"
 
@@ -17,7 +16,7 @@ export namespace handler {
             roomList.push(packet.reqRoom)
             session.EnterRoom(packet.reqRoom)
 
-            sessionList.forEach((value: Session, key: WebSocket) => {
+            sessionList.forEach((value: Session, key: number) => {
                 let list: SRoomListRes = {rooms: roomList}
                 value.Send(SRoomListRes, list)
             })
@@ -25,7 +24,7 @@ export namespace handler {
 
         static EnterRoom(session: Session, packet: CEnterRoomReq) {
             const room: protobuf.Room = roomList.find(value => value.name == packet.roomName)
-            if (room.enterPlayers.length < 2) {
+            if (room.enterPlayers.length < 2 && room.pwd == packet.submitPwd) {
                 session.EnterRoom(room)
 
                 let res: SEnterRoomRes = {isOk: true}

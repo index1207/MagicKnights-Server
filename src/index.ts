@@ -1,6 +1,9 @@
 // @ts-ignore
 
 import {Listener} from "./core/listener";
+import {CEnterRoomReq} from "./proto/Room";
+import {Field, Type, util} from "protobufjs";
+import test = util.base64.test;
 
 var os = require('os');
 

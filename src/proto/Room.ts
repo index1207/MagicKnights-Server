@@ -31,6 +31,7 @@ export interface CCreateRoom {
 
 export interface CEnterRoomReq {
   roomName: string;
+  submitPwd: string;
 }
 
 export interface SEnterRoomRes {
@@ -355,13 +356,16 @@ export const CCreateRoom = {
 };
 
 function createBaseCEnterRoomReq(): CEnterRoomReq {
-  return { roomName: "" };
+  return { roomName: "", submitPwd: "" };
 }
 
 export const CEnterRoomReq = {
   encode(message: CEnterRoomReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.roomName !== "") {
       writer.uint32(10).string(message.roomName);
+    }
+    if (message.submitPwd !== "") {
+      writer.uint32(18).string(message.submitPwd);
     }
     return writer;
   },
@@ -380,6 +384,13 @@ export const CEnterRoomReq = {
 
           message.roomName = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.submitPwd = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -390,13 +401,19 @@ export const CEnterRoomReq = {
   },
 
   fromJSON(object: any): CEnterRoomReq {
-    return { roomName: isSet(object.roomName) ? String(object.roomName) : "" };
+    return {
+      roomName: isSet(object.roomName) ? String(object.roomName) : "",
+      submitPwd: isSet(object.submitPwd) ? String(object.submitPwd) : "",
+    };
   },
 
   toJSON(message: CEnterRoomReq): unknown {
     const obj: any = {};
     if (message.roomName !== "") {
       obj.roomName = message.roomName;
+    }
+    if (message.submitPwd !== "") {
+      obj.submitPwd = message.submitPwd;
     }
     return obj;
   },
@@ -407,6 +424,7 @@ export const CEnterRoomReq = {
   fromPartial<I extends Exact<DeepPartial<CEnterRoomReq>, I>>(object: I): CEnterRoomReq {
     const message = createBaseCEnterRoomReq();
     message.roomName = object.roomName ?? "";
+    message.submitPwd = object.submitPwd ?? "";
     return message;
   },
 };

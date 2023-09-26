@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc && pkg . --out-path build -t node18-win-x64"
+    "compile": "tsc",
+    "build": "pkg . --out-path build -t node18-win-x64"
   },
   "bin": {
     "app": "dist/index.js"
@@ -14,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
+    "node": "^20.6.0",
     "nodejs": "^0.0.0",
     "protobufjs": "^7.2.5",
     "ts-node": "^10.9.1",

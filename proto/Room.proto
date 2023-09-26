@@ -29,6 +29,7 @@ message C_CreateRoom {
 
 message C_EnterRoomReq {
   string roomName = 1;
+  string submitPwd = 2;
 }
 
 message S_EnterRoomRes {

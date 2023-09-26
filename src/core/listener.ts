@@ -24,14 +24,14 @@ export class Listener
             const session: Session = new Session(socket)
             session.OnConnected();
 
-            sessionList.set(socket, session)
+            sessionList.set(session.GetID(), session)
 
             socket.on('message', (packet: Buffer) => {
                 OnRecvPacket(session, packet)
             })
             socket.on('close', () => {
                 session.OnDisconnected()
-                sessionList.delete(socket)
+                sessionList.delete(session.GetID())
             })
         })
     }
