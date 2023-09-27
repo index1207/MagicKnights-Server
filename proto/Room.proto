@@ -34,4 +34,11 @@ message C_EnterRoomReq {
 
 message S_EnterRoomRes {
   bool isOk = 1;
+  optional Room enterRoom = 2;
+}
+
+message C_LeaveRoom { }
+
+message S_UnicastLeaveRoom {
+  Room room = 1;
 }

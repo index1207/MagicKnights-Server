@@ -36,6 +36,14 @@ export interface CEnterRoomReq {
 
 export interface SEnterRoomRes {
   isOk: boolean;
+  enterRoom?: Room | undefined;
+}
+
+export interface CLeaveRoom {
+}
+
+export interface SUnicastLeaveRoom {
+  room: Room | undefined;
 }
 
 function createBaseRoom(): Room {
@@ -430,13 +438,16 @@ export const CEnterRoomReq = {
 };
 
 function createBaseSEnterRoomRes(): SEnterRoomRes {
-  return { isOk: false };
+  return { isOk: false, enterRoom: undefined };
 }
 
 export const SEnterRoomRes = {
   encode(message: SEnterRoomRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.isOk === true) {
       writer.uint32(8).bool(message.isOk);
+    }
+    if (message.enterRoom !== undefined) {
+      Room.encode(message.enterRoom, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -455,6 +466,13 @@ export const SEnterRoomRes = {
 
           message.isOk = reader.bool();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.enterRoom = Room.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -465,13 +483,19 @@ export const SEnterRoomRes = {
   },
 
   fromJSON(object: any): SEnterRoomRes {
-    return { isOk: isSet(object.isOk) ? Boolean(object.isOk) : false };
+    return {
+      isOk: isSet(object.isOk) ? Boolean(object.isOk) : false,
+      enterRoom: isSet(object.enterRoom) ? Room.fromJSON(object.enterRoom) : undefined,
+    };
   },
 
   toJSON(message: SEnterRoomRes): unknown {
     const obj: any = {};
     if (message.isOk === true) {
       obj.isOk = message.isOk;
+    }
+    if (message.enterRoom !== undefined) {
+      obj.enterRoom = Room.toJSON(message.enterRoom);
     }
     return obj;
   },
@@ -482,6 +506,109 @@ export const SEnterRoomRes = {
   fromPartial<I extends Exact<DeepPartial<SEnterRoomRes>, I>>(object: I): SEnterRoomRes {
     const message = createBaseSEnterRoomRes();
     message.isOk = object.isOk ?? false;
+    message.enterRoom = (object.enterRoom !== undefined && object.enterRoom !== null)
+      ? Room.fromPartial(object.enterRoom)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseCLeaveRoom(): CLeaveRoom {
+  return {};
+}
+
+export const CLeaveRoom = {
+  encode(_: CLeaveRoom, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CLeaveRoom {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCLeaveRoom();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): CLeaveRoom {
+    return {};
+  },
+
+  toJSON(_: CLeaveRoom): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CLeaveRoom>, I>>(base?: I): CLeaveRoom {
+    return CLeaveRoom.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<CLeaveRoom>, I>>(_: I): CLeaveRoom {
+    const message = createBaseCLeaveRoom();
+    return message;
+  },
+};
+
+function createBaseSUnicastLeaveRoom(): SUnicastLeaveRoom {
+  return { room: undefined };
+}
+
+export const SUnicastLeaveRoom = {
+  encode(message: SUnicastLeaveRoom, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.room !== undefined) {
+      Room.encode(message.room, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SUnicastLeaveRoom {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSUnicastLeaveRoom();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.room = Room.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SUnicastLeaveRoom {
+    return { room: isSet(object.room) ? Room.fromJSON(object.room) : undefined };
+  },
+
+  toJSON(message: SUnicastLeaveRoom): unknown {
+    const obj: any = {};
+    if (message.room !== undefined) {
+      obj.room = Room.toJSON(message.room);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SUnicastLeaveRoom>, I>>(base?: I): SUnicastLeaveRoom {
+    return SUnicastLeaveRoom.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SUnicastLeaveRoom>, I>>(object: I): SUnicastLeaveRoom {
+    const message = createBaseSUnicastLeaveRoom();
+    message.room = (object.room !== undefined && object.room !== null) ? Room.fromPartial(object.room) : undefined;
     return message;
   },
 };

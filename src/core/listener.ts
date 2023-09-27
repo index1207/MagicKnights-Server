@@ -1,6 +1,7 @@
 import {Server, WebSocket} from "ws";
 import {Session, sessionList} from "./session";
 import {OnRecvPacket} from "./packetHandler"
+import {Socket} from "net";
 
 export class Listener
 {
@@ -20,9 +21,12 @@ export class Listener
             console.log(`Server is running on ${this.host}:${this.port}`)
         })
 
-        this.server.on('connection', (socket: WebSocket) => {
+        this.server.on('connection', (socket: WebSocket, req) => {
             const session: Session = new Session(socket)
             session.OnConnected();
+
+            const httpSock: Socket = req.socket;
+            console.log(`[INFO] Connected ${httpSock.remoteAddress}`)
 
             sessionList.set(session.GetID(), session)
 
@@ -30,6 +34,7 @@ export class Listener
                 OnRecvPacket(session, packet)
             })
             socket.on('close', () => {
+                console.log(`[INFO] Disconnected ${httpSock.remoteAddress}`)
                 session.OnDisconnected()
                 sessionList.delete(session.GetID())
             })

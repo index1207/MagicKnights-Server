@@ -1,5 +1,5 @@
 import {WebSocket} from "ws";
-import {Room, SConnectedToServer, SRoomListRes} from "../proto/Room";
+import {Room, SConnectedToServer, SRoomListRes, SUnicastLeaveRoom} from "../proto/Room";
 import {packetId} from './packetHandler'
 
 import {handler} from "../handler/room";
@@ -55,21 +55,32 @@ export class Session {
     }
 
     LeaveRoom() {
-        this.room.enterPlayers.splice(this.room.enterPlayers.findIndex((r) => r == this.sessionId), 1)
+        this.room.enterPlayers.splice(
+            this.room.enterPlayers.findIndex((r) => r == this.sessionId), 1
+        )
+
+        // remove empty room
         if (this.room.enterPlayers.length == 0) {
             roomList.splice(roomList.findIndex((r) => {
                 return r.name == this.room.name
             }), 1)
         }
-        let newRoomList: SRoomListRes = {rooms: roomList}
-        sessionList.forEach((value, key) => {
-            value.Send(SRoomListRes, newRoomList)
-        })
+        this.Broadcast(SRoomListRes, SRoomListRes.create({rooms: roomList}))
+
+
+        // unicast leave room
+        this.Unicast(SUnicastLeaveRoom, SUnicastLeaveRoom.create({room: this.room}))
     }
-    Broadcast(packetId: any, packet: any) {
-        for (const playerId of this.room.enterPlayers) {
-            if (playerId != this.sessionId)
-                sessionList.get(playerId).Send(packetId, packet)
+
+    Unicast(packetId: any, packet: any) {
+        if(this.room != null) for (let playerId of this.room.enterPlayers) {
+            sessionList.get(playerId).Send(packetId, packet)
         }
+    }
+
+    Broadcast(packetId: any, packet: any) {
+        sessionList.forEach(value => {
+            value.Send(packetId, packet)
+        })
     }
 }

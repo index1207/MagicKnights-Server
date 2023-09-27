@@ -1,4 +1,4 @@
-import {CCreateRoom, CEnterRoomReq, SEnterRoomRes, SRoomListRes} from "../proto/Room";
+import {CCreateRoom, CEnterRoomReq, CLeaveRoom, SEnterRoomRes, SRoomListRes, SUnicastLeaveRoom} from "../proto/Room";
 import {Session, sessionList} from "../core/session";
 
 import * as protobuf from "../proto/Room"
@@ -16,22 +16,32 @@ export namespace handler {
             roomList.push(packet.reqRoom)
             session.EnterRoom(packet.reqRoom)
 
-            sessionList.forEach((value: Session, key: number) => {
-                let list: SRoomListRes = {rooms: roomList}
-                value.Send(SRoomListRes, list)
-            })
+            session.Broadcast(SRoomListRes, SRoomListRes.create({rooms: roomList}))
         }
 
         static EnterRoom(session: Session, packet: CEnterRoomReq) {
             const room: protobuf.Room = roomList.find(value => value.name == packet.roomName)
             if (room.enterPlayers.length < 2 && room.pwd == packet.submitPwd) {
                 session.EnterRoom(room)
+                if(room.enterPlayers.length == 2) {
+                    session.Broadcast(SRoomListRes, SRoomListRes.create({rooms: roomList}))
+                }
 
-                let res: SEnterRoomRes = {isOk: true}
-                session.Send(SEnterRoomRes, res)
+                session.Unicast(SEnterRoomRes, SEnterRoomRes.create({isOk: true, enterRoom: room}))
             } else {
-                let res: SEnterRoomRes = {isOk: false}
+                let res: SEnterRoomRes = {isOk: false, enterRoom: protobuf.Room.create()}
                 session.Send(SEnterRoomRes, res)
+            }
+        }
+
+        static LeaveRoom(session: Session, packet: CLeaveRoom) {
+            let room: protobuf.Room = session.room;
+            if (session.room != null) {
+                session.LeaveRoom()
+
+                room.enterPlayers.forEach(value => {
+                    sessionList.get(value).Send(SUnicastLeaveRoom, SUnicastLeaveRoom.create({room: room}))
+                })
             }
         }
     }

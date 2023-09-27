@@ -1,6 +1,14 @@
 import {Session} from "./session"
 import {PacketID} from "../proto/Packet";
-import {CCreateRoom, CEnterRoomReq, SConnectedToServer, SEnterRoomRes, SRoomListRes,} from "../proto/Room";
+import {
+    CCreateRoom,
+    CEnterRoomReq,
+    CLeaveRoom,
+    SUnicastLeaveRoom,
+    SConnectedToServer,
+    SEnterRoomRes,
+    SRoomListRes,
+} from "../proto/Room";
 import {CRoomListReq} from "../proto/Room";
 import {handler} from "../handler/room";
 import Room = handler.Room;
@@ -13,7 +21,8 @@ packetId.set(SRoomListRes, PacketID.S_ROOM_LIST_RES)
 packetId.set(CCreateRoom, PacketID.C_CREATE_ROOM)
 packetId.set(CEnterRoomReq, PacketID.C_ENTER_ROOM_REQ)
 packetId.set(SEnterRoomRes, PacketID.S_ENTER_ROOM_RES)
-
+packetId.set(CLeaveRoom, PacketID.C_LEAVE_ROOM)
+packetId.set(SUnicastLeaveRoom, PacketID.S_UNICAST_LEAVE_ROOM)
 
 export function OnRecvPacket(session: Session, buffer: Buffer) {
     const pktId: number = buffer.readUint16LE(0);
@@ -34,6 +43,10 @@ export function OnRecvPacket(session: Session, buffer: Buffer) {
         {
             Room.EnterRoom(session, CEnterRoomReq.decode(serializedData))
             break;
+        }
+        case PacketID.C_LEAVE_ROOM:
+        {
+            Room.LeaveRoom(session, CLeaveRoom.decode(serializedData))
         }
     }
 }

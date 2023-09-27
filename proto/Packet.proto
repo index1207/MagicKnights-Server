@@ -15,4 +15,6 @@ enum PacketID
   C_CREATE_ROOM = 3;
   C_ENTER_ROOM_REQ = 4;
   S_ENTER_ROOM_RES = 5;
+  C_LEAVE_ROOM = 6;
+  S_UNICAST_LEAVE_ROOM = 7;
 }

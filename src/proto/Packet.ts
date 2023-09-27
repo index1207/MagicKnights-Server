@@ -9,6 +9,8 @@ export enum PacketID {
   C_CREATE_ROOM = 3,
   C_ENTER_ROOM_REQ = 4,
   S_ENTER_ROOM_RES = 5,
+  C_LEAVE_ROOM = 6,
+  S_UNICAST_LEAVE_ROOM = 7,
   UNRECOGNIZED = -1,
 }
 
@@ -32,6 +34,12 @@ export function packetIDFromJSON(object: any): PacketID {
     case 5:
     case "S_ENTER_ROOM_RES":
       return PacketID.S_ENTER_ROOM_RES;
+    case 6:
+    case "C_LEAVE_ROOM":
+      return PacketID.C_LEAVE_ROOM;
+    case 7:
+    case "S_UNICAST_LEAVE_ROOM":
+      return PacketID.S_UNICAST_LEAVE_ROOM;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -53,6 +61,10 @@ export function packetIDToJSON(object: PacketID): string {
       return "C_ENTER_ROOM_REQ";
     case PacketID.S_ENTER_ROOM_RES:
       return "S_ENTER_ROOM_RES";
+    case PacketID.C_LEAVE_ROOM:
+      return "C_LEAVE_ROOM";
+    case PacketID.S_UNICAST_LEAVE_ROOM:
+      return "S_UNICAST_LEAVE_ROOM";
     case PacketID.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
