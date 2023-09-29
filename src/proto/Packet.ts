@@ -11,6 +11,8 @@ export enum PacketID {
   S_ENTER_ROOM_RES = 5,
   C_LEAVE_ROOM = 6,
   S_UNICAST_LEAVE_ROOM = 7,
+  C_START_GAME = 8,
+  S_UNICAST_START_GAME = 9,
   UNRECOGNIZED = -1,
 }
 
@@ -40,6 +42,12 @@ export function packetIDFromJSON(object: any): PacketID {
     case 7:
     case "S_UNICAST_LEAVE_ROOM":
       return PacketID.S_UNICAST_LEAVE_ROOM;
+    case 8:
+    case "C_START_GAME":
+      return PacketID.C_START_GAME;
+    case 9:
+    case "S_UNICAST_START_GAME":
+      return PacketID.S_UNICAST_START_GAME;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -65,6 +73,10 @@ export function packetIDToJSON(object: PacketID): string {
       return "C_LEAVE_ROOM";
     case PacketID.S_UNICAST_LEAVE_ROOM:
       return "S_UNICAST_LEAVE_ROOM";
+    case PacketID.C_START_GAME:
+      return "C_START_GAME";
+    case PacketID.S_UNICAST_START_GAME:
+      return "S_UNICAST_START_GAME";
     case PacketID.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

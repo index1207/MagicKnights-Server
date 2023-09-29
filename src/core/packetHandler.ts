@@ -7,7 +7,7 @@ import {
     SUnicastLeaveRoom,
     SConnectedToServer,
     SEnterRoomRes,
-    SRoomListRes,
+    SRoomListRes, CStartGame, SUnicastStartGame,
 } from "../proto/Room";
 import {CRoomListReq} from "../proto/Room";
 import {handler} from "../handler/room";
@@ -23,6 +23,8 @@ packetId.set(CEnterRoomReq, PacketID.C_ENTER_ROOM_REQ)
 packetId.set(SEnterRoomRes, PacketID.S_ENTER_ROOM_RES)
 packetId.set(CLeaveRoom, PacketID.C_LEAVE_ROOM)
 packetId.set(SUnicastLeaveRoom, PacketID.S_UNICAST_LEAVE_ROOM)
+packetId.set(CStartGame, PacketID.C_START_GAME)
+packetId.set(SUnicastStartGame, PacketID.S_UNICAST_START_GAME)
 
 export function OnRecvPacket(session: Session, buffer: Buffer) {
     const pktId: number = buffer.readUint16LE(0);
@@ -47,6 +49,10 @@ export function OnRecvPacket(session: Session, buffer: Buffer) {
         case PacketID.C_LEAVE_ROOM:
         {
             Room.LeaveRoom(session, CLeaveRoom.decode(serializedData))
+        }
+        case PacketID.C_START_GAME:
+        {
+            Room.StartGame(session, CStartGame.decode(serializedData));
         }
     }
 }

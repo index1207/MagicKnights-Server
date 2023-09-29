@@ -1,4 +1,12 @@
-import {CCreateRoom, CEnterRoomReq, CLeaveRoom, SEnterRoomRes, SRoomListRes, SUnicastLeaveRoom} from "../proto/Room";
+import {
+    CCreateRoom,
+    CEnterRoomReq,
+    CLeaveRoom,
+    CStartGame,
+    SEnterRoomRes,
+    SRoomListRes,
+    SUnicastLeaveRoom, SUnicastStartGame
+} from "../proto/Room";
 import {Session, sessionList} from "../core/session";
 
 import * as protobuf from "../proto/Room"
@@ -43,6 +51,10 @@ export namespace handler {
                     sessionList.get(value).Send(SUnicastLeaveRoom, SUnicastLeaveRoom.create({room: room}))
                 })
             }
+        }
+
+        static StartGame(session: Session, startGame: CStartGame) {
+            session.Unicast(SUnicastStartGame, SUnicastStartGame.create())
         }
     }
 }

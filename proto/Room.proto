@@ -42,3 +42,11 @@ message C_LeaveRoom { }
 message S_UnicastLeaveRoom {
   Room room = 1;
 }
+
+message C_StartGame {
+
+}
+
+message S_UnicastStartGame {
+
+}
