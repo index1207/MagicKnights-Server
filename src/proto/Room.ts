@@ -46,6 +46,12 @@ export interface SUnicastLeaveRoom {
   room: Room | undefined;
 }
 
+export interface CStartGame {
+}
+
+export interface SUnicastStartGame {
+}
+
 function createBaseRoom(): Room {
   return { name: "", pwd: undefined, enterPlayers: [] };
 }
@@ -609,6 +615,92 @@ export const SUnicastLeaveRoom = {
   fromPartial<I extends Exact<DeepPartial<SUnicastLeaveRoom>, I>>(object: I): SUnicastLeaveRoom {
     const message = createBaseSUnicastLeaveRoom();
     message.room = (object.room !== undefined && object.room !== null) ? Room.fromPartial(object.room) : undefined;
+    return message;
+  },
+};
+
+function createBaseCStartGame(): CStartGame {
+  return {};
+}
+
+export const CStartGame = {
+  encode(_: CStartGame, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CStartGame {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCStartGame();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): CStartGame {
+    return {};
+  },
+
+  toJSON(_: CStartGame): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CStartGame>, I>>(base?: I): CStartGame {
+    return CStartGame.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<CStartGame>, I>>(_: I): CStartGame {
+    const message = createBaseCStartGame();
+    return message;
+  },
+};
+
+function createBaseSUnicastStartGame(): SUnicastStartGame {
+  return {};
+}
+
+export const SUnicastStartGame = {
+  encode(_: SUnicastStartGame, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SUnicastStartGame {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSUnicastStartGame();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): SUnicastStartGame {
+    return {};
+  },
+
+  toJSON(_: SUnicastStartGame): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SUnicastStartGame>, I>>(base?: I): SUnicastStartGame {
+    return SUnicastStartGame.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SUnicastStartGame>, I>>(_: I): SUnicastStartGame {
+    const message = createBaseSUnicastStartGame();
     return message;
   },
 };
