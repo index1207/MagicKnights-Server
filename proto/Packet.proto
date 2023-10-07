@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package packet;
 
-option csharp_namespace = "Google.Protobuf.Packet";
+option csharp_namespace = "MagicKnights.Api.Packet";
 
-enum PacketID
+enum EPacketID
 {
   S_CONNECTED_TO_SERVER = 0;
   C_ROOM_LIST_REQ = 1;

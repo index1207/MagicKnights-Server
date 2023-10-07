@@ -4,7 +4,7 @@ import * as _m0 from "protobufjs/minimal";
 export const protobufPackage = "packet";
 
 /** room data */
-export interface Room {
+export interface FRoom {
   name: string;
   pwd?: string | undefined;
   enterPlayers: number[];
@@ -20,13 +20,13 @@ export interface CRoomListReq {
 }
 
 /** (response) load all rooms */
-export interface SRoomListRes {
-  rooms: Room[];
+export interface SRoomList {
+  rooms: FRoom[];
 }
 
 /** create new room */
 export interface CCreateRoom {
-  reqRoom: Room | undefined;
+  reqRoom: FRoom | undefined;
 }
 
 export interface CEnterRoomReq {
@@ -36,28 +36,28 @@ export interface CEnterRoomReq {
 
 export interface SEnterRoomRes {
   isOk: boolean;
-  enterRoom?: Room | undefined;
+  enterRoom?: FRoom | undefined;
 }
 
 export interface CLeaveRoom {
 }
 
-export interface SUnicastLeaveRoom {
-  room: Room | undefined;
+export interface SNotifyLeaveRoom {
+  room: FRoom | undefined;
 }
 
-export interface CStartGame {
+export interface CStartGameReq {
 }
 
-export interface SUnicastStartGame {
+export interface SNotifyStartGame {
 }
 
-function createBaseRoom(): Room {
+function createBaseFRoom(): FRoom {
   return { name: "", pwd: undefined, enterPlayers: [] };
 }
 
-export const Room = {
-  encode(message: Room, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const FRoom = {
+  encode(message: FRoom, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -72,10 +72,10 @@ export const Room = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Room {
+  decode(input: _m0.Reader | Uint8Array, length?: number): FRoom {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseRoom();
+    const message = createBaseFRoom();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -119,7 +119,7 @@ export const Room = {
     return message;
   },
 
-  fromJSON(object: any): Room {
+  fromJSON(object: any): FRoom {
     return {
       name: isSet(object.name) ? String(object.name) : "",
       pwd: isSet(object.pwd) ? String(object.pwd) : undefined,
@@ -127,7 +127,7 @@ export const Room = {
     };
   },
 
-  toJSON(message: Room): unknown {
+  toJSON(message: FRoom): unknown {
     const obj: any = {};
     if (message.name !== "") {
       obj.name = message.name;
@@ -141,11 +141,11 @@ export const Room = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Room>, I>>(base?: I): Room {
-    return Room.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<FRoom>, I>>(base?: I): FRoom {
+    return FRoom.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<Room>, I>>(object: I): Room {
-    const message = createBaseRoom();
+  fromPartial<I extends Exact<DeepPartial<FRoom>, I>>(object: I): FRoom {
+    const message = createBaseFRoom();
     message.name = object.name ?? "";
     message.pwd = object.pwd ?? undefined;
     message.enterPlayers = object.enterPlayers?.map((e) => e) || [];
@@ -253,22 +253,22 @@ export const CRoomListReq = {
   },
 };
 
-function createBaseSRoomListRes(): SRoomListRes {
+function createBaseSRoomList(): SRoomList {
   return { rooms: [] };
 }
 
-export const SRoomListRes = {
-  encode(message: SRoomListRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const SRoomList = {
+  encode(message: SRoomList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.rooms) {
-      Room.encode(v!, writer.uint32(10).fork()).ldelim();
+      FRoom.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SRoomListRes {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SRoomList {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSRoomListRes();
+    const message = createBaseSRoomList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -277,7 +277,7 @@ export const SRoomListRes = {
             break;
           }
 
-          message.rooms.push(Room.decode(reader, reader.uint32()));
+          message.rooms.push(FRoom.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -288,24 +288,24 @@ export const SRoomListRes = {
     return message;
   },
 
-  fromJSON(object: any): SRoomListRes {
-    return { rooms: Array.isArray(object?.rooms) ? object.rooms.map((e: any) => Room.fromJSON(e)) : [] };
+  fromJSON(object: any): SRoomList {
+    return { rooms: Array.isArray(object?.rooms) ? object.rooms.map((e: any) => FRoom.fromJSON(e)) : [] };
   },
 
-  toJSON(message: SRoomListRes): unknown {
+  toJSON(message: SRoomList): unknown {
     const obj: any = {};
     if (message.rooms?.length) {
-      obj.rooms = message.rooms.map((e) => Room.toJSON(e));
+      obj.rooms = message.rooms.map((e) => FRoom.toJSON(e));
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SRoomListRes>, I>>(base?: I): SRoomListRes {
-    return SRoomListRes.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<SRoomList>, I>>(base?: I): SRoomList {
+    return SRoomList.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SRoomListRes>, I>>(object: I): SRoomListRes {
-    const message = createBaseSRoomListRes();
-    message.rooms = object.rooms?.map((e) => Room.fromPartial(e)) || [];
+  fromPartial<I extends Exact<DeepPartial<SRoomList>, I>>(object: I): SRoomList {
+    const message = createBaseSRoomList();
+    message.rooms = object.rooms?.map((e) => FRoom.fromPartial(e)) || [];
     return message;
   },
 };
@@ -317,7 +317,7 @@ function createBaseCCreateRoom(): CCreateRoom {
 export const CCreateRoom = {
   encode(message: CCreateRoom, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.reqRoom !== undefined) {
-      Room.encode(message.reqRoom, writer.uint32(10).fork()).ldelim();
+      FRoom.encode(message.reqRoom, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -334,7 +334,7 @@ export const CCreateRoom = {
             break;
           }
 
-          message.reqRoom = Room.decode(reader, reader.uint32());
+          message.reqRoom = FRoom.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -346,13 +346,13 @@ export const CCreateRoom = {
   },
 
   fromJSON(object: any): CCreateRoom {
-    return { reqRoom: isSet(object.reqRoom) ? Room.fromJSON(object.reqRoom) : undefined };
+    return { reqRoom: isSet(object.reqRoom) ? FRoom.fromJSON(object.reqRoom) : undefined };
   },
 
   toJSON(message: CCreateRoom): unknown {
     const obj: any = {};
     if (message.reqRoom !== undefined) {
-      obj.reqRoom = Room.toJSON(message.reqRoom);
+      obj.reqRoom = FRoom.toJSON(message.reqRoom);
     }
     return obj;
   },
@@ -363,7 +363,7 @@ export const CCreateRoom = {
   fromPartial<I extends Exact<DeepPartial<CCreateRoom>, I>>(object: I): CCreateRoom {
     const message = createBaseCCreateRoom();
     message.reqRoom = (object.reqRoom !== undefined && object.reqRoom !== null)
-      ? Room.fromPartial(object.reqRoom)
+      ? FRoom.fromPartial(object.reqRoom)
       : undefined;
     return message;
   },
@@ -453,7 +453,7 @@ export const SEnterRoomRes = {
       writer.uint32(8).bool(message.isOk);
     }
     if (message.enterRoom !== undefined) {
-      Room.encode(message.enterRoom, writer.uint32(18).fork()).ldelim();
+      FRoom.encode(message.enterRoom, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -477,7 +477,7 @@ export const SEnterRoomRes = {
             break;
           }
 
-          message.enterRoom = Room.decode(reader, reader.uint32());
+          message.enterRoom = FRoom.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -491,7 +491,7 @@ export const SEnterRoomRes = {
   fromJSON(object: any): SEnterRoomRes {
     return {
       isOk: isSet(object.isOk) ? Boolean(object.isOk) : false,
-      enterRoom: isSet(object.enterRoom) ? Room.fromJSON(object.enterRoom) : undefined,
+      enterRoom: isSet(object.enterRoom) ? FRoom.fromJSON(object.enterRoom) : undefined,
     };
   },
 
@@ -501,7 +501,7 @@ export const SEnterRoomRes = {
       obj.isOk = message.isOk;
     }
     if (message.enterRoom !== undefined) {
-      obj.enterRoom = Room.toJSON(message.enterRoom);
+      obj.enterRoom = FRoom.toJSON(message.enterRoom);
     }
     return obj;
   },
@@ -513,7 +513,7 @@ export const SEnterRoomRes = {
     const message = createBaseSEnterRoomRes();
     message.isOk = object.isOk ?? false;
     message.enterRoom = (object.enterRoom !== undefined && object.enterRoom !== null)
-      ? Room.fromPartial(object.enterRoom)
+      ? FRoom.fromPartial(object.enterRoom)
       : undefined;
     return message;
   },
@@ -562,22 +562,22 @@ export const CLeaveRoom = {
   },
 };
 
-function createBaseSUnicastLeaveRoom(): SUnicastLeaveRoom {
+function createBaseSNotifyLeaveRoom(): SNotifyLeaveRoom {
   return { room: undefined };
 }
 
-export const SUnicastLeaveRoom = {
-  encode(message: SUnicastLeaveRoom, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const SNotifyLeaveRoom = {
+  encode(message: SNotifyLeaveRoom, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.room !== undefined) {
-      Room.encode(message.room, writer.uint32(10).fork()).ldelim();
+      FRoom.encode(message.room, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SUnicastLeaveRoom {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SNotifyLeaveRoom {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSUnicastLeaveRoom();
+    const message = createBaseSNotifyLeaveRoom();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -586,7 +586,7 @@ export const SUnicastLeaveRoom = {
             break;
           }
 
-          message.room = Room.decode(reader, reader.uint32());
+          message.room = FRoom.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -597,41 +597,41 @@ export const SUnicastLeaveRoom = {
     return message;
   },
 
-  fromJSON(object: any): SUnicastLeaveRoom {
-    return { room: isSet(object.room) ? Room.fromJSON(object.room) : undefined };
+  fromJSON(object: any): SNotifyLeaveRoom {
+    return { room: isSet(object.room) ? FRoom.fromJSON(object.room) : undefined };
   },
 
-  toJSON(message: SUnicastLeaveRoom): unknown {
+  toJSON(message: SNotifyLeaveRoom): unknown {
     const obj: any = {};
     if (message.room !== undefined) {
-      obj.room = Room.toJSON(message.room);
+      obj.room = FRoom.toJSON(message.room);
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SUnicastLeaveRoom>, I>>(base?: I): SUnicastLeaveRoom {
-    return SUnicastLeaveRoom.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<SNotifyLeaveRoom>, I>>(base?: I): SNotifyLeaveRoom {
+    return SNotifyLeaveRoom.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SUnicastLeaveRoom>, I>>(object: I): SUnicastLeaveRoom {
-    const message = createBaseSUnicastLeaveRoom();
-    message.room = (object.room !== undefined && object.room !== null) ? Room.fromPartial(object.room) : undefined;
+  fromPartial<I extends Exact<DeepPartial<SNotifyLeaveRoom>, I>>(object: I): SNotifyLeaveRoom {
+    const message = createBaseSNotifyLeaveRoom();
+    message.room = (object.room !== undefined && object.room !== null) ? FRoom.fromPartial(object.room) : undefined;
     return message;
   },
 };
 
-function createBaseCStartGame(): CStartGame {
+function createBaseCStartGameReq(): CStartGameReq {
   return {};
 }
 
-export const CStartGame = {
-  encode(_: CStartGame, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const CStartGameReq = {
+  encode(_: CStartGameReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CStartGame {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CStartGameReq {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCStartGame();
+    const message = createBaseCStartGameReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -644,37 +644,37 @@ export const CStartGame = {
     return message;
   },
 
-  fromJSON(_: any): CStartGame {
+  fromJSON(_: any): CStartGameReq {
     return {};
   },
 
-  toJSON(_: CStartGame): unknown {
+  toJSON(_: CStartGameReq): unknown {
     const obj: any = {};
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CStartGame>, I>>(base?: I): CStartGame {
-    return CStartGame.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<CStartGameReq>, I>>(base?: I): CStartGameReq {
+    return CStartGameReq.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<CStartGame>, I>>(_: I): CStartGame {
-    const message = createBaseCStartGame();
+  fromPartial<I extends Exact<DeepPartial<CStartGameReq>, I>>(_: I): CStartGameReq {
+    const message = createBaseCStartGameReq();
     return message;
   },
 };
 
-function createBaseSUnicastStartGame(): SUnicastStartGame {
+function createBaseSNotifyStartGame(): SNotifyStartGame {
   return {};
 }
 
-export const SUnicastStartGame = {
-  encode(_: SUnicastStartGame, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const SNotifyStartGame = {
+  encode(_: SNotifyStartGame, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SUnicastStartGame {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SNotifyStartGame {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSUnicastStartGame();
+    const message = createBaseSNotifyStartGame();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -687,20 +687,20 @@ export const SUnicastStartGame = {
     return message;
   },
 
-  fromJSON(_: any): SUnicastStartGame {
+  fromJSON(_: any): SNotifyStartGame {
     return {};
   },
 
-  toJSON(_: SUnicastStartGame): unknown {
+  toJSON(_: SNotifyStartGame): unknown {
     const obj: any = {};
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SUnicastStartGame>, I>>(base?: I): SUnicastStartGame {
-    return SUnicastStartGame.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<SNotifyStartGame>, I>>(base?: I): SNotifyStartGame {
+    return SNotifyStartGame.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SUnicastStartGame>, I>>(_: I): SUnicastStartGame {
-    const message = createBaseSUnicastStartGame();
+  fromPartial<I extends Exact<DeepPartial<SNotifyStartGame>, I>>(_: I): SNotifyStartGame {
+    const message = createBaseSNotifyStartGame();
     return message;
   },
 };

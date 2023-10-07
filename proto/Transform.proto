@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package packet;
 
+option csharp_namespace = "MagicKnights.Api.Packet";
+
 message FVector3 {
   float x = 1;
   float y = 2;

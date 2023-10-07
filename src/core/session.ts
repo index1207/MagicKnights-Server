@@ -1,5 +1,5 @@
 import {WebSocket} from "ws";
-import {Room, SConnectedToServer, SRoomListRes, SUnicastLeaveRoom} from "../proto/Room";
+import {FRoom, SConnectedToServer, SRoomList, SNotifyLeaveRoom} from "../proto/Room";
 import {packetId} from './packetHandler'
 
 import {handler} from "../handler/room";
@@ -11,7 +11,7 @@ export let sessionList: Map<number, Session> = new Map<number, Session>()
 export class Session {
     public sock: WebSocket
     public sessionId: number
-    public room: Room
+    public room: FRoom
 
     constructor(socket: WebSocket) {
         this.sock = socket
@@ -49,7 +49,7 @@ export class Session {
         }
     }
 
-    EnterRoom(room: Room) {
+    EnterRoom(room: FRoom) {
         this.room = room;
         this.room.enterPlayers.push(this.sessionId)
     }
@@ -65,11 +65,10 @@ export class Session {
                 return r.name == this.room.name
             }), 1)
         }
-        this.Broadcast(SRoomListRes, SRoomListRes.create({rooms: roomList}))
-
+        this.Broadcast(SRoomList, SRoomList.create({rooms: roomList}))
 
         // unicast leave room
-        this.Unicast(SUnicastLeaveRoom, SUnicastLeaveRoom.create({room: this.room}))
+        this.Unicast(SNotifyLeaveRoom, SNotifyLeaveRoom.create({room: this.room}))
     }
 
     Unicast(packetId: any, packet: any) {

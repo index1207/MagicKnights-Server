@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package packet;
 
+option csharp_namespace = "MagicKnights.Api.Packet";
+
 enum EInputDirection
 {
   None = 0;
