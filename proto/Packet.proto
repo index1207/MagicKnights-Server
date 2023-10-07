@@ -2,9 +2,6 @@ syntax = "proto3";
 
 package packet;
 
-import "Transform.proto";
-import "Room.proto";
-
 option csharp_namespace = "Google.Protobuf.Packet";
 
 enum PacketID

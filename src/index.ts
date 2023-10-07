@@ -3,11 +3,11 @@
 import {Listener} from "./core/listener";
 import os from 'os';
 
-var interfaces = os.networkInterfaces();
-var addresses = [];
-for (var k in interfaces) {
-    for (var k2 in interfaces[k]) {
-        var address = interfaces[k][k2];
+let interfaces = os.networkInterfaces();
+let addresses: string[] = [];
+for (let k in interfaces) {
+    for (let k2 in interfaces[k]) {
+        let address = interfaces[k][k2];
         if (address.family === 'IPv4' && !address.internal) {
             addresses.push(address.address);
         }

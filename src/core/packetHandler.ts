@@ -49,10 +49,12 @@ export function OnRecvPacket(session: Session, buffer: Buffer) {
         case PacketID.C_LEAVE_ROOM:
         {
             Room.LeaveRoom(session, CLeaveRoom.decode(serializedData))
+            break;
         }
         case PacketID.C_START_GAME:
         {
             Room.StartGame(session, CStartGame.decode(serializedData));
+            break;
         }
     }
 }
