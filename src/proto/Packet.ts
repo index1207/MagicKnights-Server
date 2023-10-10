@@ -11,8 +11,10 @@ export enum EPacketID {
   S_ENTER_ROOM_RES = 5,
   C_LEAVE_ROOM = 6,
   S_UNICAST_LEAVE_ROOM = 7,
-  C_START_GAME = 8,
+  C_START_GAME_REQ = 8,
   S_UNICAST_START_GAME = 9,
+  C_MOVE = 10,
+  S_MOVE = 11,
   UNRECOGNIZED = -1,
 }
 
@@ -43,11 +45,17 @@ export function ePacketIDFromJSON(object: any): EPacketID {
     case "S_UNICAST_LEAVE_ROOM":
       return EPacketID.S_UNICAST_LEAVE_ROOM;
     case 8:
-    case "C_START_GAME":
-      return EPacketID.C_START_GAME;
+    case "C_START_GAME_REQ":
+      return EPacketID.C_START_GAME_REQ;
     case 9:
     case "S_UNICAST_START_GAME":
       return EPacketID.S_UNICAST_START_GAME;
+    case 10:
+    case "C_MOVE":
+      return EPacketID.C_MOVE;
+    case 11:
+    case "S_MOVE":
+      return EPacketID.S_MOVE;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -73,10 +81,14 @@ export function ePacketIDToJSON(object: EPacketID): string {
       return "C_LEAVE_ROOM";
     case EPacketID.S_UNICAST_LEAVE_ROOM:
       return "S_UNICAST_LEAVE_ROOM";
-    case EPacketID.C_START_GAME:
-      return "C_START_GAME";
+    case EPacketID.C_START_GAME_REQ:
+      return "C_START_GAME_REQ";
     case EPacketID.S_UNICAST_START_GAME:
       return "S_UNICAST_START_GAME";
+    case EPacketID.C_MOVE:
+      return "C_MOVE";
+    case EPacketID.S_MOVE:
+      return "S_MOVE";
     case EPacketID.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

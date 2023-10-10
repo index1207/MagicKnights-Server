@@ -2,8 +2,7 @@ import {WebSocket} from "ws";
 import {FRoom, SConnectedToServer, SRoomList, SNotifyLeaveRoom} from "../proto/Room";
 import {packetId} from './packetHandler'
 
-import {handler} from "../handler/room";
-import roomList = handler.roomList;
+import {roomList} from "../handler/room";
 
 let lastSessionId: number = 1
 export let sessionList: Map<number, Session> = new Map<number, Session>()
