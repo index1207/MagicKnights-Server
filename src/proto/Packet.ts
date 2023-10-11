@@ -5,16 +5,16 @@ export const protobufPackage = "packet";
 export enum EPacketID {
   S_CONNECTED_TO_SERVER = 0,
   C_ROOM_LIST_REQ = 1,
-  S_ROOM_LIST_RES = 2,
+  S_ROOM_LIST = 2,
   C_CREATE_ROOM = 3,
   C_ENTER_ROOM_REQ = 4,
   S_ENTER_ROOM_RES = 5,
   C_LEAVE_ROOM = 6,
   S_UNICAST_LEAVE_ROOM = 7,
   C_START_GAME_REQ = 8,
-  S_UNICAST_START_GAME = 9,
-  C_MOVE = 10,
-  S_MOVE = 11,
+  S_NOTIFY_START_GAME = 9,
+  C_MOVE_INPUT = 10,
+  S_MOVE_INPUT = 11,
   UNRECOGNIZED = -1,
 }
 
@@ -27,8 +27,8 @@ export function ePacketIDFromJSON(object: any): EPacketID {
     case "C_ROOM_LIST_REQ":
       return EPacketID.C_ROOM_LIST_REQ;
     case 2:
-    case "S_ROOM_LIST_RES":
-      return EPacketID.S_ROOM_LIST_RES;
+    case "S_ROOM_LIST":
+      return EPacketID.S_ROOM_LIST;
     case 3:
     case "C_CREATE_ROOM":
       return EPacketID.C_CREATE_ROOM;
@@ -48,14 +48,14 @@ export function ePacketIDFromJSON(object: any): EPacketID {
     case "C_START_GAME_REQ":
       return EPacketID.C_START_GAME_REQ;
     case 9:
-    case "S_UNICAST_START_GAME":
-      return EPacketID.S_UNICAST_START_GAME;
+    case "S_NOTIFY_START_GAME":
+      return EPacketID.S_NOTIFY_START_GAME;
     case 10:
-    case "C_MOVE":
-      return EPacketID.C_MOVE;
+    case "C_MOVE_INPUT":
+      return EPacketID.C_MOVE_INPUT;
     case 11:
-    case "S_MOVE":
-      return EPacketID.S_MOVE;
+    case "S_MOVE_INPUT":
+      return EPacketID.S_MOVE_INPUT;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -69,8 +69,8 @@ export function ePacketIDToJSON(object: EPacketID): string {
       return "S_CONNECTED_TO_SERVER";
     case EPacketID.C_ROOM_LIST_REQ:
       return "C_ROOM_LIST_REQ";
-    case EPacketID.S_ROOM_LIST_RES:
-      return "S_ROOM_LIST_RES";
+    case EPacketID.S_ROOM_LIST:
+      return "S_ROOM_LIST";
     case EPacketID.C_CREATE_ROOM:
       return "C_CREATE_ROOM";
     case EPacketID.C_ENTER_ROOM_REQ:
@@ -83,12 +83,12 @@ export function ePacketIDToJSON(object: EPacketID): string {
       return "S_UNICAST_LEAVE_ROOM";
     case EPacketID.C_START_GAME_REQ:
       return "C_START_GAME_REQ";
-    case EPacketID.S_UNICAST_START_GAME:
-      return "S_UNICAST_START_GAME";
-    case EPacketID.C_MOVE:
-      return "C_MOVE";
-    case EPacketID.S_MOVE:
-      return "S_MOVE";
+    case EPacketID.S_NOTIFY_START_GAME:
+      return "S_NOTIFY_START_GAME";
+    case EPacketID.C_MOVE_INPUT:
+      return "C_MOVE_INPUT";
+    case EPacketID.S_MOVE_INPUT:
+      return "S_MOVE_INPUT";
     case EPacketID.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

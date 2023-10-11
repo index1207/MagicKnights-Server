@@ -1,8 +1,9 @@
 import {WebSocket} from "ws";
-import {FRoom, SConnectedToServer, SRoomList, SNotifyLeaveRoom} from "../proto/Room";
+import {FRoom, SConnectedToServer, SNotifyLeaveRoom, SRoomList} from "../proto/Room";
 import {packetId} from './packetHandler'
 
 import {roomList} from "../handler/room";
+import {SMoveInput} from "../proto/Status";
 
 let lastSessionId: number = 1
 export let sessionList: Map<number, Session> = new Map<number, Session>()
@@ -34,13 +35,13 @@ export class Session {
     OnRecv() {}
 
     Send(id: any, packet: any) {
-        let rawData: any = id.encode(packet).finish()
-        let buffer: Buffer = Buffer.allocUnsafe(rawData.byteLength+2)
-        buffer.writeUInt16LE(packetId.get(id), 0);
-        buffer.set(rawData, 2);
-
         try {
-            this.sock.send(buffer.toString())
+            let rawData: Uint8Array = id.encode(packet).finish()
+            let buffer: Buffer = Buffer.alloc(rawData.length + 2)
+            buffer.writeUInt16LE(packetId.get(id), 0);
+            buffer.set(rawData, 2);
+
+            this.sock.send(buffer)
             this.OnSend();
         }
         catch (e) {

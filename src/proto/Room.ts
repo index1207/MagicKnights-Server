@@ -10,45 +10,63 @@ export interface FRoom {
   enterPlayers: number[];
 }
 
-/** on connected to server */
+/**
+ * 0
+ * on connected to server
+ */
 export interface SConnectedToServer {
   playerId: number;
 }
 
-/** (request) get room list */
+/**
+ * 1
+ * (request) get room list
+ */
 export interface CRoomListReq {
 }
 
-/** (response) load all rooms */
+/**
+ * 2
+ * (response) load all rooms
+ */
 export interface SRoomList {
   rooms: FRoom[];
 }
 
-/** create new room */
+/**
+ * 3
+ * create new room
+ */
 export interface CCreateRoom {
   reqRoom: FRoom | undefined;
 }
 
+/** 4 */
 export interface CEnterRoomReq {
   roomName: string;
   submitPwd: string;
 }
 
+/** 5 */
 export interface SEnterRoomRes {
   isOk: boolean;
   enterRoom?: FRoom | undefined;
 }
 
+/** 6 */
 export interface CLeaveRoom {
 }
 
+/** 7 */
 export interface SNotifyLeaveRoom {
   room: FRoom | undefined;
 }
 
+/** 8 */
 export interface CStartGameReq {
 }
 
+/** 9 */
 export interface SNotifyStartGame {
 }
 

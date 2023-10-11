@@ -1,10 +1,9 @@
 syntax = "proto3";
+import "Transform.proto";
 
 package packet;
 
 option csharp_namespace = "MagicKnights.Api.Packet";
-
-import "Transform.proto";
 
 enum EInputDirection
 {
@@ -15,12 +14,15 @@ enum EInputDirection
   Right = 4;
 }
 
-message C_Move {
+// 10
+message C_MoveInput {
   FVector3 position = 1;
   EInputDirection dir = 2;
 }
 
-message S_Move {
+// 11
+message S_MoveInput {
   FVector3 position = 1;
   EInputDirection dir = 2;
+  int32 playerId = 3;
 }

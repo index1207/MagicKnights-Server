@@ -4,7 +4,6 @@ package packet;
 
 option csharp_namespace = "MagicKnights.Api.Packet";
 
-
 // room data
 message FRoom {
   string name = 1;
@@ -12,44 +11,54 @@ message FRoom {
   repeated int32 enterPlayers = 3;
 }
 
+// 0
 // on connected to server
 message S_ConnectedToServer {
   int32 playerId = 1;
 }
 
+// 1
 // (request) get room list
 message C_RoomListReq { }
 
+// 2
 // (response) load all rooms
 message S_RoomList {
   repeated FRoom rooms = 1;
 }
 
+// 3
 // create new room
 message C_CreateRoom {
   FRoom reqRoom = 1;
 }
 
+// 4
 message C_EnterRoomReq {
   string roomName = 1;
   string submitPwd = 2;
 }
 
+// 5
 message S_EnterRoomRes {
   bool isOk = 1;
   optional FRoom enterRoom = 2;
 }
 
+// 6
 message C_LeaveRoom { }
 
+// 7
 message S_NotifyLeaveRoom {
   FRoom room = 1;
 }
 
+// 8
 message C_StartGameReq {
 
 }
 
+// 9
 message S_NotifyStartGame {
 
 }

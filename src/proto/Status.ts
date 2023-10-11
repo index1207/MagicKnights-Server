@@ -55,22 +55,25 @@ export function eInputDirectionToJSON(object: EInputDirection): string {
   }
 }
 
-export interface CMove {
+/** 10 */
+export interface CMoveInput {
   position: FVector3 | undefined;
   dir: EInputDirection;
 }
 
-export interface SMove {
+/** 11 */
+export interface SMoveInput {
   position: FVector3 | undefined;
   dir: EInputDirection;
+  playerId: number;
 }
 
-function createBaseCMove(): CMove {
+function createBaseCMoveInput(): CMoveInput {
   return { position: undefined, dir: 0 };
 }
 
-export const CMove = {
-  encode(message: CMove, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const CMoveInput = {
+  encode(message: CMoveInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.position !== undefined) {
       FVector3.encode(message.position, writer.uint32(10).fork()).ldelim();
     }
@@ -80,10 +83,10 @@ export const CMove = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CMove {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CMoveInput {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCMove();
+    const message = createBaseCMoveInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -110,14 +113,14 @@ export const CMove = {
     return message;
   },
 
-  fromJSON(object: any): CMove {
+  fromJSON(object: any): CMoveInput {
     return {
       position: isSet(object.position) ? FVector3.fromJSON(object.position) : undefined,
       dir: isSet(object.dir) ? eInputDirectionFromJSON(object.dir) : 0,
     };
   },
 
-  toJSON(message: CMove): unknown {
+  toJSON(message: CMoveInput): unknown {
     const obj: any = {};
     if (message.position !== undefined) {
       obj.position = FVector3.toJSON(message.position);
@@ -128,11 +131,11 @@ export const CMove = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CMove>, I>>(base?: I): CMove {
-    return CMove.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<CMoveInput>, I>>(base?: I): CMoveInput {
+    return CMoveInput.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<CMove>, I>>(object: I): CMove {
-    const message = createBaseCMove();
+  fromPartial<I extends Exact<DeepPartial<CMoveInput>, I>>(object: I): CMoveInput {
+    const message = createBaseCMoveInput();
     message.position = (object.position !== undefined && object.position !== null)
       ? FVector3.fromPartial(object.position)
       : undefined;
@@ -141,25 +144,28 @@ export const CMove = {
   },
 };
 
-function createBaseSMove(): SMove {
-  return { position: undefined, dir: 0 };
+function createBaseSMoveInput(): SMoveInput {
+  return { position: undefined, dir: 0, playerId: 0 };
 }
 
-export const SMove = {
-  encode(message: SMove, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const SMoveInput = {
+  encode(message: SMoveInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.position !== undefined) {
       FVector3.encode(message.position, writer.uint32(10).fork()).ldelim();
     }
     if (message.dir !== 0) {
       writer.uint32(16).int32(message.dir);
     }
+    if (message.playerId !== 0) {
+      writer.uint32(24).int32(message.playerId);
+    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SMove {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SMoveInput {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSMove();
+    const message = createBaseSMoveInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -177,6 +183,13 @@ export const SMove = {
 
           message.dir = reader.int32() as any;
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.playerId = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -186,14 +199,15 @@ export const SMove = {
     return message;
   },
 
-  fromJSON(object: any): SMove {
+  fromJSON(object: any): SMoveInput {
     return {
       position: isSet(object.position) ? FVector3.fromJSON(object.position) : undefined,
       dir: isSet(object.dir) ? eInputDirectionFromJSON(object.dir) : 0,
+      playerId: isSet(object.playerId) ? Number(object.playerId) : 0,
     };
   },
 
-  toJSON(message: SMove): unknown {
+  toJSON(message: SMoveInput): unknown {
     const obj: any = {};
     if (message.position !== undefined) {
       obj.position = FVector3.toJSON(message.position);
@@ -201,18 +215,22 @@ export const SMove = {
     if (message.dir !== 0) {
       obj.dir = eInputDirectionToJSON(message.dir);
     }
+    if (message.playerId !== 0) {
+      obj.playerId = Math.round(message.playerId);
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SMove>, I>>(base?: I): SMove {
-    return SMove.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<SMoveInput>, I>>(base?: I): SMoveInput {
+    return SMoveInput.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SMove>, I>>(object: I): SMove {
-    const message = createBaseSMove();
+  fromPartial<I extends Exact<DeepPartial<SMoveInput>, I>>(object: I): SMoveInput {
+    const message = createBaseSMoveInput();
     message.position = (object.position !== undefined && object.position !== null)
       ? FVector3.fromPartial(object.position)
       : undefined;
     message.dir = object.dir ?? 0;
+    message.playerId = object.playerId ?? 0;
     return message;
   },
 };

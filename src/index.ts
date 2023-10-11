@@ -14,5 +14,5 @@ for (let k in interfaces) {
     }
 }
 
-const listener: Listener = new Listener(addresses[0], 8081)
+const listener: Listener = new Listener('loopback', 8081)
 listener.run()
